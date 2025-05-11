@@ -25,7 +25,8 @@
       <h1>讓AI看懂你的手勢</h1>
     </div>
   </div>
-
+    
+    
     <h2><span class="material-icons">label</span>標籤管理</h2>
     <div class="input-group">
       <input type="text" id="new-label" placeholder="輸入新手勢標籤名稱">
@@ -50,8 +51,15 @@
       </div>
       -->
     </div>
+    <h2><span class="material-icons">star</span>使用簡介</h2>
+    <p> 1.請盡量使用Chrome，並同意鏡頭權限，以及設定區塊選擇鏡頭。</p>
+    <p> 2.選擇要偵測的手(單手請選對應手)。</p>
+    <p> 3.新增手勢標籤，並開始錄製手勢樣本。</p>
+    <p> 4.錄製完成後，點擊開始訓練模型。</p>
+    <p> 5.訓練完成後，設定保持時間，點擊啟動辨識，只需在時間內維持手勢，就可將對應的標籤輸入至文字輸出區。</p>
+    <p> 6.如果覺得自己模型很棒，可以點擊存檔下次繼續訓練或使用！</p>
   </div>
-
+  
   <div id="video-container">
     <div class="camera-overlay">
       <div class="camera-status" id="camera-status">相機啟動中...</div>
@@ -73,8 +81,8 @@
       <div class="setting-group">
         <label>偵測手部：</label>
         <select id="hand-selection">
-          <option value="all" selected>全部</option>
-          <option value="left">左手</option>
+          <option value="all" >全部</option>
+          <option value="left" selected>左手</option>
           <option value="right">右手</option>
         </select>
       </div>
@@ -119,7 +127,7 @@
     <h2><span class="material-icons">visibility</span>即時辨識</h2>
     <div class="settings-row">
       <label>保持時間 (秒)：
-        <input type="number" id="hold-threshold" value="2" min="0.5" step="0.5">
+        <input type="number" id="hold-threshold" value="1" min="0.5" step="0.5">
       </label>
     </div>
     <button id="start-recognize"><span class="material-icons">play_circle</span> 啟動辨識</button>
@@ -136,7 +144,7 @@
     
     <div class = "version">
       <hr>
-      <p>v1.0.3 Damian Hsu </p>
+      <p>v2.0.0 Damian Hsu </p>
     </div>
   </div>
   
