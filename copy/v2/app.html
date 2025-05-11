@@ -1,0 +1,125 @@
+<!-- app.html -->
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>手指密碼-讓AI猜你說什麼</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <!-- TensorFlow.js & MediaPipe Hands CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+  <script defer src="script.js"></script>
+</head>
+<body>  
+  <div id="controls">
+    <div class="header">
+      <h1>手指密碼-讓AI猜你說什麼</h1>
+    </div>
+
+    <h2><span class="material-icons">label</span>標籤管理</h2>
+    <div class="input-group">
+      <input type="text" id="new-label" placeholder="輸入新手勢標籤名稱">
+      <button id="add-label"><span class="material-icons">add</span> 新增標籤</button>
+    </div>
+    <div id="labels">
+      <!-- Label items will be dynamically generated here -->
+      <!-- Example structure for a label item (to be created by JS):
+      <div class="label-item">
+        <div class="label-info">
+          <span class="label-text">標籤名稱</span>
+          <span class="sample-count-display">0 樣本</span>
+        </div>
+        <div class="label-progress-bar">
+          <div class="label-progress"></div>
+        </div>
+        <div class="label-controls">
+          <button class="record-btn"><span class="material-icons">fiber_manual_record</span> 錄製</button>
+          <button class="clear-samples-btn"><span class="material-icons">delete_sweep</span> 清空資料</button>
+          <button class="delete-label-btn"><span class="material-icons">delete</span> 刪除標籤</button>
+        </div>
+      </div>
+      -->
+    </div>
+  </div>
+
+  <div id="video-container">
+    <div class="camera-overlay">
+      <div class="camera-status" id="camera-status">相機啟動中...</div>
+    </div>
+    <video id="video" autoplay playsinline></video>
+    <canvas id="overlay"></canvas>
+    <div class="prediction-overlay" id="prediction-overlay"></div>
+  </div>
+
+  <div id="output-and-settings"> <!-- New wrapper for right-side panel -->
+    <h2><span class="material-icons">settings</span> 設定</h2>
+    <div class="settings-section">
+      <div class="setting-group">
+        <label>偵測手部：</label>
+        <select id="hand-selection">
+          <option value="all" selected>全部</option>
+          <option value="left">左手</option>
+          <option value="right">右手</option>
+        </select>
+      </div>
+
+      <div class="setting-group">
+        <label>訓練輪數：</label>
+        <input type="number" id="training-epochs" value="50" min="10" max="200">
+      </div>
+
+      <div class="setting-group">
+        <label>學習率：</label>
+        <input type="number" id="learning-rate" value="0.001" min="0.0001" max="0.01" step="0.0001">
+      </div>
+
+      <div class="setting-group">
+        <label>驗證集比例：</label>
+        <input type="number" id="validation-split-ratio" value="0.2" min="0.05" max="0.5" step="0.01">
+      </div>
+    </div>
+
+    <h2><span class="material-icons">model_training</span>模型管理</h2>
+    <button id="train"><span class="material-icons">play_arrow</span> 開始訓練模型</button>
+    <div class="training-status">
+        <label id = 'val_accuracy'>驗證集準確率：</label>
+    </div>
+    <div id="training-status" class="hidden">
+      <div class="progress-bar">
+        <div id="progress" class="progress"></div>
+      </div>
+      <div id="epoch-info">Epoch: 0/20</div>
+    </div>
+    <div class="model-buttons">
+      <button id="save-model"><span class="material-icons">save</span> 儲存模型</button>
+      <div class="file-input-wrapper">
+        <button class="file-btn"><span class="material-icons">upload_file</span> 載入模型</button>
+        <input type="file" id="load-model" accept=".json">
+      </div>
+    </div>
+
+    <h2><span class="material-icons">visibility</span>即時辨識</h2>
+    <div class="settings-row">
+      <label>保持時間 (秒)：
+        <input type="number" id="hold-threshold" value="2" min="0.5" step="0.5">
+      </label>
+    </div>
+    <button id="start-recognize"><span class="material-icons">play_circle</span> 啟動辨識</button>
+    
+    <div id="output-area"> <!-- Renamed from "output" to avoid id conflict if old CSS targets #output -->
+      <h2><span class="material-icons">text_fields</span> 文字輸出區</h2>
+      <textarea id="text-output" rows="5" placeholder="辨識到的文字會在此顯示，您可以自行編輯..." ></textarea>
+      <div class="output-controls">
+        <button id="clear-output"><span class="material-icons">clear</span> 清除</button>
+        <button id="copy-output"><span class="material-icons">content_copy</span> 複製</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+</body>
+</html>
